@@ -1,0 +1,3 @@
+# How many seconds must a player wait between getting a bad omen from killing a patrol leader
+# Give the permission `antiraidfarm.bypass` to players you wish to bypass this
+bad-omen-cooldown-seconds: 180
