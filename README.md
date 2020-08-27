@@ -1,6 +1,6 @@
+![anti raid farm logo](https://i.imgur.com/q1JcBwF.png)
 # AntiRaidFarm
-* [Discord](https://discord.gg/g7CZdxt)
-* [bStats](https://bstats.org/plugin/bukkit/AntiRaidFarm/8660)
+* Adds a cooldown setting to prevent cheaty infinite raid farms
 
 
 ## Building
