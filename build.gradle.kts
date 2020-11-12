@@ -1,11 +1,10 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.apache.commons.io.output.ByteArrayOutputStream
 
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow") version "5.2.0"
-    id("kr.entree.spigradle") version "2.1.2"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("kr.entree.spigradle") version "2.2.3"
 }
 
 java {
@@ -15,7 +14,7 @@ java {
 
 val projectName = "AntiRaidFarm"
 group = "xyz.jpenilla"
-version = "1.0.1+${getLastCommitHash()}-SNAPSHOT"
+version = "1.0.2+${getLastCommitHash()}-SNAPSHOT"
 
 repositories {
     mavenLocal()
@@ -43,22 +42,20 @@ spigot {
 }
 
 val autoRelocate by tasks.register<ConfigureShadowRelocation>("configureShadowRelocation", ConfigureShadowRelocation::class) {
-    target = tasks.getByName("shadowJar") as ShadowJar?
+    target = tasks.shadowJar.get()
     val packageName = "${project.group}.${project.name.toLowerCase()}"
     prefix = "$packageName.shaded"
 }
 
 tasks {
-    compileJava {
-        options.compilerArgs.add("-parameters")
-        options.isFork = true
-        options.forkOptions.executable = "javac"
+    build {
+        dependsOn(shadowJar)
     }
-    withType<ShadowJar> {
+    shadowJar {
+        minimize()
+        dependsOn(autoRelocate)
         archiveClassifier.set("")
         archiveFileName.set("$projectName-${project.version}.jar")
-        dependsOn(autoRelocate)
-        minimize()
     }
 }
 
@@ -68,5 +65,5 @@ fun getLastCommitHash(): String {
         commandLine = listOf("git", "rev-parse", "--short", "HEAD")
         standardOutput = byteOut
     }
-    return byteOut.toString().trim()
+    return byteOut.toString(Charsets.UTF_8).trim()
 }
