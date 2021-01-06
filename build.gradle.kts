@@ -12,16 +12,16 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-val projectName = "AntiRaidFarm"
 group = "xyz.jpenilla"
 version = "1.0.2+${getLastCommitHash()}-SNAPSHOT"
+description = "Break cheaty raid farms with a raid cooldown"
 
 repositories {
     mavenLocal()
     mavenCentral()
-    maven(url = "https://papermc.io/repo/repository/maven-public/")
-    maven(url = "https://oss.sonatype.org/content/groups/public/")
-    maven(url = "https://jitpack.io")
+    maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://oss.sonatype.org/content/groups/public/")
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -30,9 +30,7 @@ dependencies {
 }
 
 spigot {
-    name = projectName
     apiVersion = "1.15"
-    description = "Break cheaty raid farms with a raid cooldown"
     website = "https://github.com/jmanpenilla/AntiRaidFarm"
     permissions.create("antiraidfarm.bypass") {
         description = "Bypasses raid farm cooldown"
@@ -41,21 +39,20 @@ spigot {
     authors("jmp")
 }
 
-val autoRelocate by tasks.register<ConfigureShadowRelocation>("configureShadowRelocation", ConfigureShadowRelocation::class) {
-    target = tasks.shadowJar.get()
-    val packageName = "${project.group}.${project.name.toLowerCase()}"
-    prefix = "$packageName.shaded"
-}
-
 tasks {
     build {
         dependsOn(shadowJar)
+    }
+    val autoRelocate by register("configureShadowRelocation", ConfigureShadowRelocation::class) {
+        target = shadowJar.get()
+        val packageName = "${project.group}.${project.name.toLowerCase()}"
+        prefix = "$packageName.lib"
     }
     shadowJar {
         minimize()
         dependsOn(autoRelocate)
         archiveClassifier.set("")
-        archiveFileName.set("$projectName-${project.version}.jar")
+        archiveFileName.set("${rootProject.name}-${project.version}.jar")
     }
 }
 
