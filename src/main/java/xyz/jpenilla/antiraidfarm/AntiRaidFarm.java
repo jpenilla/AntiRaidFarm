@@ -2,41 +2,39 @@ package xyz.jpenilla.antiraidfarm;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.raid.RaidTriggerEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
 public final class AntiRaidFarm extends JavaPlugin implements Listener {
     private Cache<UUID, Long> lastRaidCache;
-    private int raidCooldownSeconds = 180;
 
     @Override
     public void onEnable() {
-        saveDefaultConfig();
-        reloadConfig();
-        raidCooldownSeconds = getConfig().getInt("raid-cooldown-seconds", 180);
-        lastRaidCache = CacheBuilder.newBuilder()
+        this.saveDefaultConfig();
+        this.reloadConfig();
+        final int raidCooldownSeconds = this.getConfig().getInt("raid-cooldown-seconds", 180);
+        this.lastRaidCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(raidCooldownSeconds, TimeUnit.SECONDS)
                 .build();
-        getServer().getPluginManager().registerEvents(this, this);
+        this.getServer().getPluginManager().registerEvents(this, this);
     }
 
     @EventHandler
-    public void onRaidTrigger(RaidTriggerEvent event) {
+    public void onRaidTrigger(final RaidTriggerEvent event) {
         final Player player = event.getPlayer();
         if (player.hasPermission("antiraidfarm.bypass")) {
             return;
         }
-        final boolean hasCooldown = lastRaidCache.getIfPresent(player.getUniqueId()) != null;
+        final boolean hasCooldown = this.lastRaidCache.getIfPresent(player.getUniqueId()) != null;
         if (hasCooldown) {
             event.setCancelled(true);
         } else {
-            lastRaidCache.put(player.getUniqueId(), System.currentTimeMillis());
+            this.lastRaidCache.put(player.getUniqueId(), System.currentTimeMillis());
         }
     }
 }
