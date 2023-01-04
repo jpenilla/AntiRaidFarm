@@ -1,7 +1,10 @@
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+
 plugins {
     `java-library`
     id("net.kyori.indra.git") version "3.0.1"
-    id("kr.entree.spigradle") version "2.4.3"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
+    id("xyz.jpenilla.run-paper") version "2.0.1"
 }
 
 java {
@@ -9,7 +12,7 @@ java {
 }
 
 group = "xyz.jpenilla"
-version = "1.0.3+${lastCommitHash()}-SNAPSHOT"
+version = "1.0.3-SNAPSHOT+${lastCommitHash()}"
 description = "Break cheaty raid farms with a raid cooldown"
 
 repositories {
@@ -23,19 +26,24 @@ dependencies {
 }
 
 tasks {
+    runServer {
+        minecraftVersion("1.19.3")
+    }
     compileJava {
         options.release.set(8)
+        options.encoding = Charsets.UTF_8.name()
     }
 }
 
-spigot {
+bukkit {
+    main = "xyz.jpenilla.antiraidfarm.AntiRaidFarm"
     apiVersion = "1.15"
-    website = "https://github.com/jmanpenilla/AntiRaidFarm"
-    permissions.create("antiraidfarm.bypass") {
+    website = "https://github.com/jpenilla/AntiRaidFarm"
+    permissions.register("antiraidfarm.bypass") {
         description = "Bypasses raid farm cooldown"
-        defaults = "false"
+        default = BukkitPluginDescription.Permission.Default.FALSE
     }
-    authors("jmp")
+    authors = listOf("jmp")
 }
 
 fun lastCommitHash(): String = indraGit.commit()?.name?.substring(0, 7)

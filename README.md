@@ -1,9 +1,13 @@
-![anti raid farm logo](https://i.imgur.com/q1JcBwF.png)
+<div align="center">
+
 # AntiRaidFarm
-* Adds a cooldown setting to prevent cheaty infinite raid farms
+![logo](.github/icon.png)
 
+</div>
 
-## Building
-1. ``git clone https://github.com/jmanpenilla/AntiRaidFarm.git && cd AntiRaidFarm``
-2. ``chmod +x ./gradlew``
-3. ``./gradlew clean shadowJar``
+Plugin adding a cooldown setting to prevent cheaty infinite raid farms
+
+### Building
+1. ``git clone https://github.com/jpenilla/AntiRaidFarm.git``
+2. ``cd AntiRaidFarm``
+3. ``./gradlew build``
