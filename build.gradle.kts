@@ -1,32 +1,31 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
-import org.apache.commons.io.output.ByteArrayOutputStream
-
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("kr.entree.spigradle") version "2.2.3"
+    id("net.kyori.indra.git") version "3.0.1"
+    id("kr.entree.spigradle") version "2.4.3"
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 group = "xyz.jpenilla"
-version = "1.0.2+${getLastCommitHash()}-SNAPSHOT"
+version = "1.0.2+${lastCommitHash()}-SNAPSHOT"
 description = "Break cheaty raid farms with a raid cooldown"
 
 repositories {
-    mavenLocal()
     mavenCentral()
-    maven("https://papermc.io/repo/repository/maven-public/")
-    maven("https://oss.sonatype.org/content/groups/public/")
-    maven("https://jitpack.io")
+    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
     compileOnly("com.destroystokyo.paper", "paper-api", "1.15.2-R0.1-SNAPSHOT")
-    compileOnly("org.jetbrains", "annotations", "20.0.0")
+    compileOnly("org.jetbrains", "annotations", "23.0.0")
+}
+
+tasks {
+    compileJava {
+        options.release.set(8)
+    }
 }
 
 spigot {
@@ -39,28 +38,5 @@ spigot {
     authors("jmp")
 }
 
-tasks {
-    build {
-        dependsOn(shadowJar)
-    }
-    val autoRelocate by register("configureShadowRelocation", ConfigureShadowRelocation::class) {
-        target = shadowJar.get()
-        val packageName = "${project.group}.${project.name.toLowerCase()}"
-        prefix = "$packageName.lib"
-    }
-    shadowJar {
-        minimize()
-        dependsOn(autoRelocate)
-        archiveClassifier.set("")
-        archiveFileName.set("${rootProject.name}-${project.version}.jar")
-    }
-}
-
-fun getLastCommitHash(): String {
-    val byteOut = ByteArrayOutputStream()
-    exec {
-        commandLine = listOf("git", "rev-parse", "--short", "HEAD")
-        standardOutput = byteOut
-    }
-    return byteOut.toString(Charsets.UTF_8).trim()
-}
+fun lastCommitHash(): String = indraGit.commit()?.name?.substring(0, 7)
+  ?: error("Failed to determine git hash.")
