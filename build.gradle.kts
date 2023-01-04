@@ -12,7 +12,7 @@ java {
 }
 
 group = "xyz.jpenilla"
-version = "1.0.3"
+version = "1.0.4-SNAPSHOT+${lastCommitHash()}"
 description = "Break cheaty raid farms with a raid cooldown"
 
 repositories {
