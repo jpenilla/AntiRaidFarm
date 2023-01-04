@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
     compileOnly("com.destroystokyo.paper", "paper-api", "1.15.2-R0.1-SNAPSHOT")
-    compileOnly("org.jetbrains", "annotations", "23.0.0")
+    compileOnly("org.jetbrains", "annotations", "23.1.0")
 }
 
 tasks {
