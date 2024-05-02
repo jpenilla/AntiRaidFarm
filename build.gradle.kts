@@ -1,9 +1,9 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import xyz.jpenilla.resourcefactory.bukkit.Permission
 
 plugins {
     `java-library`
     id("net.kyori.indra.git") version "3.1.3"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
+    id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.1.1"
     id("xyz.jpenilla.run-paper") version "2.3.0"
 }
 
@@ -34,13 +34,13 @@ tasks {
     }
 }
 
-bukkit {
+bukkitPluginYaml {
     main = "xyz.jpenilla.antiraidfarm.AntiRaidFarm"
     apiVersion = "1.15"
     website = "https://github.com/jpenilla/AntiRaidFarm"
     permissions.register("antiraidfarm.bypass") {
         description = "Bypasses raid farm cooldown"
-        default = BukkitPluginDescription.Permission.Default.FALSE
+        default = Permission.Default.FALSE
     }
     authors = listOf("jmp")
 }
