@@ -3,7 +3,7 @@ import xyz.jpenilla.resourcefactory.bukkit.Permission
 plugins {
     `java-library`
     id("net.kyori.indra.git") version "3.1.3"
-    id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.3.0"
+    id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.3.1"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
